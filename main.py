@@ -1,24 +1,28 @@
 import phonenumbers
-import opencage
-
-
 from myphone import number
 from phonenumbers import geocoder, carrier
+from opencage.geocoder import OpenCageGeocode
 
-# 1. Number ko parse karna
+# 1. Phone number details nikalna
 pepnumber = phonenumbers.parse(number)
-
-# 2. Location nikalna
 location = geocoder.description_for_number(pepnumber, "en")
 print("Location: ", location)
 
-# 3. Service Provider nikalna
 service_pro = carrier.name_for_number(pepnumber, "en")
 print("Service Provider: ", service_pro)
 
-from phonenumbers import carrier
-service_pro = phonenumbers.parse(number)
-print(carrier.name_for_number(service_pro, "en"))
+# 2. OpenCage se Exact Map Location nikalna
+# Yahan apni API Key quotes (" ") ke andar likhein
+key = "APKI_OPENCAGE_API_KEY_YAHAN_DAALEIN" 
 
-from opencage.geocoder import opencage opencagegeocode
+geocoder_osm = OpenCageGeocode(key)
+query = str(location)
+results = geocoder_osm.geocode(query)
 
+# Result print karein
+if results:
+    lat = results[0]['geometry']['lat']
+    lng = results[0]['geometry']['lng']
+    print(f"Latitude: {lat}, Longitude: {lng}")
+else:
+    print("Location nahi mili")
